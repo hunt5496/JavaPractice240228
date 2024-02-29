@@ -10,6 +10,9 @@ public class Ex_3_Scanner {
 		System.out.println("당신의 이름과 나이를 작성해주세요.>(예) 이상용 41");
 		// 클래스명 참조형 변수명 = new 클래스명();
 		Scanner scanner = new Scanner(System.in);
+		// 하나의 문자열을 읽을 때 사용하는 메서드  next()
+		// System.in , 유저로부터 입력 받은 내용을 바이트로 읽고 
+		// scanner 가 문자열로 변환 하거나 또는 숫자로 변환 해준다. 
 		String nameString = scanner.next();
 		
 		// 나이를 입력 후 받을 변수를

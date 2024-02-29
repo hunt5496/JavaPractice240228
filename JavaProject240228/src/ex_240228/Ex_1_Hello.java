@@ -16,7 +16,7 @@ public class Ex_1_Hello {
 		return a + b;
 	}
 
-	// void : 리턴값이 없다는 뜻
+	// void : 리턴값이 없다는 뜻, 공허, 아무것도 없다.
 	// main : 메소드 명
 	// (String[] args) : 매개변수 정의 부분, 타입이 배열로 정의가 되어있음.
 	// String[] , 배열인데, 타입이 : String (문자열), vs 한문자 의미 (char)

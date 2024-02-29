@@ -20,6 +20,7 @@ public class Ex_3_for {
 				System.out.println("결과는 : " + result);
 			} else if (number == 0) {
 				System.out.println("프로그램 종료합니다.");
+				// 사용 안하는 메모리는 반납을 꼭 해줘야함.
 				break;
 			} else {
 				System.out.println("숫자는 1번 또는 2번 중에서 입력해주세요.");

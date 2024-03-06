@@ -1,6 +1,6 @@
 package ex_240306;
 
-public class Ex_05_interface_main_1 {
+public class Ex_06_interface_main_2 {
 
 	public static void main(String[] args) {
 		// 인터페이스를 구현한 자식 클래스를 사용.

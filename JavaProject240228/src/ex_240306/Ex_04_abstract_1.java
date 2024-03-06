@@ -37,4 +37,4 @@ public class Ex_04_abstract_1 extends Idol_abstract {
 		
 	}
 		
-}
+

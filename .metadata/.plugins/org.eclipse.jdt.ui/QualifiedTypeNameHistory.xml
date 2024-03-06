@@ -1,2 +1,17 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="java.nio.channels.NonWritableChannelException"/>
+    <fullyQualifiedTypeName name="java.lang.TypeNotPresentException"/>
+    <fullyQualifiedTypeName name="ex_240228.Ex_2_Variable.Person"/>
+    <fullyQualifiedTypeName name="javax.swing.text.html.HTML"/>
+    <fullyQualifiedTypeName name="javax.swing.text.html.CSS"/>
+    <fullyQualifiedTypeName name="java.util.function.BiConsumer"/>
+    <fullyQualifiedTypeName name="java.util.concurrent.locks.Condition"/>
+    <fullyQualifiedTypeName name="java.lang.String"/>
+    <fullyQualifiedTypeName name="java.security.PublicKey"/>
+    <fullyQualifiedTypeName name="java.util.concurrent.atomic.AtomicIntegerArray"/>
+    <fullyQualifiedTypeName name="java.util.Scanner"/>
+    <fullyQualifiedTypeName name="java.lang.System"/>
+    <fullyQualifiedTypeName name="int"/>
+    <fullyQualifiedTypeName name="java.lang.Math"/>
+</qualifiedTypeNameHistroy>

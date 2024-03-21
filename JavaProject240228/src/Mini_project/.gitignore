@@ -3,3 +3,8 @@
 /PianoKeyboard$KeyButtonListener.class
 /PianoKeyboard$1.class
 /PianoKeyboard$2.class
+/OctavePianoKeyboard.class
+/WhiteKey.class
+/BlackKey.class
+/SoundUtil.class
+/WAVPlayer.class

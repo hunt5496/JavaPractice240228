@@ -1,129 +1,189 @@
+     
 package Mini_project;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import javax.sound.sampled.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 public class PianoKeyboard extends JFrame implements KeyListener {
-    private static final long serialVersionUID = 1L;
-    private static final int WINDOW_WIDTH = 800;
-    private static final int WINDOW_HEIGHT = 300;
-    private static final int NUM_WHITE_KEYS = 7;
-    private static final int NUM_BLACK_KEYS = 5;
-    private static final int WHITE_KEY_WIDTH = 100;
-    private static final int WHITE_KEY_HEIGHT = 250;
-    private static final int BLACK_KEY_WIDTH = 60;
-    private static final int BLACK_KEY_HEIGHT = 150;
-    private static final int[] WHITE_KEY_CODES = 
-        { KeyEvent.VK_A, KeyEvent.VK_S, KeyEvent.VK_D, KeyEvent.VK_F, KeyEvent.VK_G, KeyEvent.VK_H, KeyEvent.VK_J };
-    private static final int[] BLACK_KEY_CODES = 
-        { KeyEvent.VK_W, KeyEvent.VK_E, KeyEvent.VK_T, KeyEvent.VK_Y, KeyEvent.VK_U };
-    private static final String[] WHITE_NOTES = 
-        { "C", "D", "E", "F", "G", "A", "B" };
-    private static final String[] BLACK_NOTES = 
-        { "C#", "D#", "F#", "G#", "A#" };
-    private static final String[] SOUND_FILES = 
-        { "C.wav", "D.wav", "E.wav", "F.wav", "G.wav", "A.wav", "B.wav", 
-          "C_Sharp.wav", "D_Sharp.wav", "F_Sharp.wav", "G_Sharp.wav", "A_Sharp.wav" };
-    private Clip[] clips;
+    private boolean[] whiteKeyStatus; // 흰 건반의 누름 여부를 나타내는 배열
+    private boolean[] blackKeyStatus; // 검은 건반의 누름 여부를 나타내는 배열
 
     public PianoKeyboard() {
-        super("Piano Keyboard");
-        setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(null); // 절대 위치 지정을 위해 레이아웃을 null로 설정
+        setTitle("Piano Keyboard");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(800, 200);
+        getContentPane().setBackground(Color.lightGray);
+        addKeyListener(this); // 키 리스너 등록
 
-        // 검은색 건반 키 생성 및 추가
-        for (int i = 0; i < NUM_BLACK_KEYS; i++) {
-            JButton blackKeyButton = new JButton();
-            blackKeyButton.setBounds((i * (WHITE_KEY_WIDTH * 2)) + (WHITE_KEY_WIDTH * 7 / 10), 0, BLACK_KEY_WIDTH, BLACK_KEY_HEIGHT);
-            blackKeyButton.setBackground(Color.BLACK);
-            blackKeyButton.setFocusable(false);
-            blackKeyButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-            blackKeyButton.addActionListener(new KeyButtonListener(NUM_WHITE_KEYS + i));
-            add(blackKeyButton);
-        }
-
-        // 흰색 건반 키 생성 및 추가
-        for (int i = 0; i < NUM_WHITE_KEYS; i++) {
-            JButton whiteKeyButton = new JButton();
-            whiteKeyButton.setBounds(i * WHITE_KEY_WIDTH, 0, WHITE_KEY_WIDTH, WHITE_KEY_HEIGHT);
-            whiteKeyButton.setBackground(Color.WHITE);
-            whiteKeyButton.setFocusable(false);
-            whiteKeyButton.setBorder(BorderFactory.createLineBorder(Color.BLACK, 2));
-            whiteKeyButton.addActionListener(new KeyButtonListener(i));
-            add(whiteKeyButton);
-
-            JLabel noteLabel = new JLabel(WHITE_NOTES[i]);
-            noteLabel.setBounds((i * WHITE_KEY_WIDTH) + (WHITE_KEY_WIDTH / 3), WHITE_KEY_HEIGHT, 30, 20);
-            add(noteLabel);
-        }
-
-        // 음원 로드 및 초기화
-        initializeClips();
-
-        // 키보드 입력을 위한 KeyListener 등록
-        addKeyListener(this);
+        // 키보드 입력 상태를 나타내는 배열 초기화
+        whiteKeyStatus = new boolean[7];
+        blackKeyStatus = new boolean[5];
     }
 
-    // 음원 초기화 메소드
-    private void initializeClips() {
-        try {
-            clips = new Clip[NUM_WHITE_KEYS + NUM_BLACK_KEYS];
-            AudioInputStream audioInputStream;
-            for (int i = 0; i < NUM_WHITE_KEYS + NUM_BLACK_KEYS; i++) {
-                audioInputStream = AudioSystem.getAudioInputStream(PianoKeyboard.class.getResource(SOUND_FILES[i]));
-                clips[i] = AudioSystem.getClip();
-                clips[i].open(audioInputStream);
+    private void drawKeyboard(Graphics g) {
+        int whiteX = 10;
+        int blackX = 25;
+        int y = 50;
+        int whiteWidth = 30;
+        int blackWidth = 20;
+        int height = 120;
+        int blackHeight = 80;
+
+        // 흰 건반 그리기
+        for (int i = 0; i < 7; i++) {
+            if (whiteKeyStatus[i]) {
+                g.setColor(Color.YELLOW);
+            } else {
+                g.setColor(Color.WHITE);
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+            g.fillRect(whiteX, y, whiteWidth, height);
+            g.setColor(Color.BLACK);
+            g.drawRect(whiteX, y, whiteWidth, height);
+            whiteX += whiteWidth;
+        }
+
+        for (int i = 0; i < 5; i++) {
+            if (blackKeyStatus[i]) {
+                g.setColor(Color.YELLOW);
+            } else {
+                g.setColor(Color.BLACK);
+            }
+            if (i == 0) {
+                blackX = 30;
+            } else if (i == 1) {
+                blackX = 60;
+            } else if (i == 2) {
+                blackX = 120;
+            } else if (i == 3) {
+                blackX = 150;
+            } else if (i == 4) {
+                blackX = 180;
+            }
+            g.fillRect(blackX, y, blackWidth, blackHeight);
+            g.setColor(Color.WHITE);
+            g.drawRect(blackX, y, blackWidth, blackHeight);
         }
     }
 
-    // 키보드 입력 처리 메소드
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        drawKeyboard(g);
+    }
+
     @Override
     public void keyPressed(KeyEvent e) {
+        // 사용자가 키를 누를 때 호출
         int keyCode = e.getKeyCode();
-        for (int i = 0; i < NUM_WHITE_KEYS + NUM_BLACK_KEYS; i++) {
-            if (keyCode == WHITE_KEY_CODES[i] || keyCode == BLACK_KEY_CODES[i - NUM_WHITE_KEYS]) {
-                playSound(i);
-                return;
-            }
+        // 건반에 대응하는 키를 누른 상태로 변경하고 소리 재생
+        switch (keyCode) {
+            case KeyEvent.VK_A:
+                whiteKeyStatus[0] = true; // 도
+                SoundUtil.playSound("do.wav");
+                break;
+            case KeyEvent.VK_S:
+                whiteKeyStatus[1] = true; // 레
+                SoundUtil.playSound("re.wav");
+                break;
+            case KeyEvent.VK_D:
+                whiteKeyStatus[2] = true; // 미
+                SoundUtil.playSound("mi.wav");
+                break;
+            case KeyEvent.VK_F:
+                whiteKeyStatus[3] = true; // 파
+                SoundUtil.playSound("fa.wav");
+                break;
+            case KeyEvent.VK_G:
+                whiteKeyStatus[4] = true; // 솔
+                SoundUtil.playSound("sol.wav");
+                break;
+            case KeyEvent.VK_H:
+                whiteKeyStatus[5] = true; // 라
+                SoundUtil.playSound("la.wav");
+                break;
+            case KeyEvent.VK_J:
+                whiteKeyStatus[6] = true; // 시
+                SoundUtil.playSound("si.wav");
+                break;
+            case KeyEvent.VK_W:
+                blackKeyStatus[0] = true; // 도#
+                SoundUtil.playSound("do_sharp.wav");
+                break;
+            case KeyEvent.VK_E:
+                blackKeyStatus[1] = true; // 레#
+                SoundUtil.playSound("re_sharp.wav");
+                break;
+            case KeyEvent.VK_T:
+                blackKeyStatus[2] = true; // 파#
+                SoundUtil.playSound("fa_sharp.wav");
+                break;
+            case KeyEvent.VK_Y:
+                blackKeyStatus[3] = true; // 솔#
+                SoundUtil.playSound("sol_sharp.wav");
+                break;
+            case KeyEvent.VK_U:
+                blackKeyStatus[4] = true; // 라#
+                SoundUtil.playSound("la_sharp.wav");
+                break;
         }
+        // 화면을 다시 그려서 키를 누른 상태로 업데이트
+        repaint();
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {}
+    public void keyReleased(KeyEvent e) {
+        // 사용자가 키를 눌렀다 뗄 때 호출
+        int keyCode = e.getKeyCode();
+        // 건반에 대응하는 키를 떼어낸 상태로 변경
+        switch (keyCode) {
+            case KeyEvent.VK_A:
+                whiteKeyStatus[0] = false; // 도
+                break;
+            case KeyEvent.VK_S:
+                whiteKeyStatus[1] = false; // 레
+                break;
+            case KeyEvent.VK_D:
+                whiteKeyStatus[2] = false; // 미
+                break;
+            case KeyEvent.VK_F:
+                whiteKeyStatus[3] = false; // 파
+                break;
+            case KeyEvent.VK_G:
+                whiteKeyStatus[4] = false; // 솔
+                break;
+            case KeyEvent.VK_H:
+            	whiteKeyStatus[5] = false; // 라
+                break;
+            case KeyEvent.VK_J:
+                whiteKeyStatus[6] = false; // 시
+                break;
+            case KeyEvent.VK_W:
+                blackKeyStatus[0] = false; // 도#
+                break;
+            case KeyEvent.VK_E:
+                blackKeyStatus[1] = false; // 레#
+                break;
+            case KeyEvent.VK_T:
+                blackKeyStatus[2] = false; // 파#
+                break;
+            case KeyEvent.VK_Y:
+                blackKeyStatus[3] = false; // 솔#
+                break;
+            case KeyEvent.VK_U:
+                blackKeyStatus[4] = false; // 라#
+                break;
+        }
+        // 화면을 다시 그려서 키를 떼어낸 상태로 업데이트
+        repaint();
+    }
 
     @Override
-    public void keyTyped(KeyEvent e) {}
-
-    // 소리 재생 메소드
-    private void playSound(int index) {
-        if (clips[index].isRunning())
-            clips[index].stop();
-        clips[index].setFramePosition(0);
-        clips[index].start();
+    public void keyTyped(KeyEvent e) {
+        // 사용하지 않습니다. (여기서는 사용하지 않습니다.)
     }
 
-    // 각 건반 키의 ActionListener 구현
-    private class KeyButtonListener implements ActionListener {
-        private int index;
-
-        public KeyButtonListener(int index) {
-            this.index = index;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e)
-        {
-            playSound(index);
-        }
-    }
-
-    // 메인 메소드
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             PianoKeyboard piano = new PianoKeyboard();
